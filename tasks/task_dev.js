@@ -11,7 +11,7 @@ var fs = require('fs');
 var path = require('path');
 
 module.exports = function (gulp, config) {
-    gulp.task('build_dev', function () {
+    gulp.task('dev', function () {
         async.parallel([
             function(cb){
                 task_img(cb);

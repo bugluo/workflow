@@ -1,3 +1,4 @@
+var gulp = require('gulp');
 var zip = require('gulp-zip');
 var util = require('./lib/util');
 

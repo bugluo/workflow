@@ -1,9 +1,8 @@
+var gulp = require('gulp');
 var async = require('async');
 var util = require('./lib/util');
 var copy = require('gulp-copy');
 var less = require('gulp-less');
-var ejs = require('gulp-ejs');
-var ejshelper = require('tmt-ejs-helper');
 var minifyCSS = require('gulp-minify-css');
 var tmtsprite = require('gulp-tmtsprite');
 var gulpif = require('gulp-if');
@@ -17,7 +16,7 @@ var webp = require('./common/webp');
 module.exports = function (gulp, config) {
 
     //build_dist
-    gulp.task('build_dist', function (cb) {
+    gulp.task('dist', function (cb) {
 
         async.series([
             function (cb) {
@@ -79,26 +78,20 @@ module.exports = function (gulp, config) {
                         cb();
                     });
             },
+            function (cb){
+                gulp.src('./src/html/**/*')
+                    .pipe(copy('./dist/', {prefix: 1}))
+                    .on('end', function () {
+                        util.task_log('task_html');
+                        cb();
+                    });
+            },
             function (cb) {
                 gulp.src('./src/js/**/*')
                     .pipe(uglify())
                     .pipe(gulp.dest('./dist/js'))
                     .on('end', function () {
                         util.task_log('task_js');
-                        cb();
-                    });
-            },
-            function (cb) {
-
-                gulp.src(['./src/html/**/*.html', '!./src/html/_*/**/*.html'])
-                    .pipe(ejs(ejshelper()))
-                    .pipe(usemin({
-                        jsmin: uglify()
-                    }))
-                    .pipe(gulp.dest('./dist/html'))
-                    .on('end', function () {
-                        util.task_log('task_ejs');
-                        util.task_log('task_jsmin');
                         cb();
                     });
             },
